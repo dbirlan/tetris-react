@@ -26,12 +26,16 @@ export const usePlayer = () => {
     const clonedPlayer = JSON.parse(JSON.stringify(player));
     clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
 
+    // smart collision detection : we check for collisions when we try to rotate the tetromino
     const pos = clonedPlayer.pos.x;
     let offset = 1;
+    // checkCollision checks collisions throughout the tetromino's length
     while (checkCollision(clonedPlayer, stage, { x: 0, y: 0 })) {
       clonedPlayer.pos.x += offset;
+      // ternary operator allowing us to check collisions left and right of the tetromino
       offset = -(offset + (offset > 0 ? 1 : -1));
       if (offset > clonedPlayer.tetromino[0].length) {
+        // if there is a collision, we rotate the player again (return to initial state)
         rotate(clonedPlayer.tetromino, -dir);
         clonedPlayer.pos.x = pos;
         return;
